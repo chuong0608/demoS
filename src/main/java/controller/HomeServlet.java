@@ -26,7 +26,12 @@ public class HomeServlet extends HttpServlet {
         }
         switch (action) {
             case "create":{
-                showCreateForm(request,response);
+                try {
+                    showCreateForm(request,response);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                break;
             }
             default: {
                 try {
@@ -36,10 +41,13 @@ public class HomeServlet extends HttpServlet {
                 }
             }
         }
+
     }
 
-    private void showCreateForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    private void showCreateForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
         RequestDispatcher requestDispatcher = request.getRequestDispatcher("student/create.jsp");
+        List<Classroom> classrooms = classService.findAll();
+        request.setAttribute("classes",classrooms);
         requestDispatcher.forward(request,response);
     }
 
@@ -50,6 +58,10 @@ public class HomeServlet extends HttpServlet {
         String name= request.getParameter("name");
         if(name != null){
             students = studentService.findByName("%" + name + "%");
+        }
+        String classId = request.getParameter("classId");
+        if(classId != null){
+            students = studentService.findAllByClass(Integer.parseInt(classId));
         }
         request.setAttribute("students", students);
         request.getRequestDispatcher("index.jsp").forward(request,response);

@@ -29,7 +29,7 @@
                             <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/home?action=create">Add Student</a>
+                            <a class="nav-link" href="/Students?action=create">Add Student</a>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-expanded="false">
@@ -57,9 +57,10 @@
     </div>
     <div class="row">
         <div class="col-3">
-            lop
+            <h2 class="mb-3">Danh Sách Lớp</h2>
+
             <c:forEach items="${classes}" var="cla">
-                <h4><a href="">${cla.name}</a></h4>
+                <h4><a href="/home?classId=${cla.id}">${cla.name}</a></h4>
             </c:forEach>
         </div>
         <div class="col-9">
@@ -70,6 +71,7 @@
                     <th scope="col">Name</th>
                     <th scope="col">Age</th>
                     <th scope="col">Class</th>
+                    <th scope="col">Action</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -78,6 +80,16 @@
                             <td>${std.name}</td>
                             <td>${std.age}</td>
                             <td>${std.classroom.name}</td>
+                            <td>
+                                <a href="/Students?action=view&id=${std.id}" class="btn btn-outline-info">View</a>
+                                <a href="/Students?action=update&id=${std.id}" class="btn btn-outline-warning">sửa</a>
+                                <form action="/Students" method="post" id="delete${std.id}">
+                                    <input type="hidden" name="id" value="${std.id}">
+                                    <input type="hidden" name="action" value="delete">
+                                    <a onclick="checkDelete(${std.id})" class="btn btn-outline-danger">xóa</a>
+                                </form>
+
+                            </td>
                         </tr>
                     </c:forEach>
                 </tbody>
@@ -85,5 +97,12 @@
         </div>
     </div>
 </div>
+<script>
+    function checkDelete(id){
+        if(confirm("Bạn có chắc chắn muốn xóa!")){
+            document.getElementById("delete"+id).submit();
+        }
+    }
+</script>
 </body>
 </html>

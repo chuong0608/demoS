@@ -49,22 +49,66 @@ public class StudentServiceIpml implements IStudentService{
 
     @Override
     public void add(Student student) throws SQLException {
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement("insert into student(name,age,classId) values (?,?,?)")) {
+            preparedStatement.setString(1, student.getName());
+            preparedStatement.setInt(2,student.getAge());
+            preparedStatement.setInt(3,student.getClassroom().getId());
+            preparedStatement.executeUpdate();
+        }catch (SQLException e){
+            System.out.println(e.getMessage());
+        }
 
     }
 
     @Override
     public Student findById(int id) {
-        return null;
+        Student student = new Student();
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM student where id = ?")) {
+            preparedStatement.setInt(1,id);
+            System.out.println(preparedStatement);
+            // Step 3: Execute the query or update query
+            ResultSet rs = preparedStatement.executeQuery();
+            // Step 4: Process the ResultSet object.
+            while (rs.next()) {
+                String name = rs.getString("name");
+                int age = rs.getInt("age");
+                int classId =  rs.getInt("classId");
+                Classroom classroom = classService.findById(classId);
+                student = new Student(id, name,age,classroom);
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return student;
     }
 
     @Override
     public boolean delete(int id) throws SQLException {
-        return false;
+        boolean rowDelete;
+        try(Connection connection = getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement("delete from student where id = ?")) {
+            preparedStatement.setInt(1,id);
+            rowDelete = preparedStatement.executeUpdate()>0;
+        }
+        return rowDelete;
     }
 
     @Override
     public boolean update(Student student) throws SQLException {
-        return false;
+        boolean rowUpdate= false;
+        try(Connection connection = getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement("update student set name = ?, age = ?, classId = ? where id = ?")) {
+            preparedStatement.setString(1, student.getName());
+            preparedStatement.setInt(2,student.getAge());
+            preparedStatement.setInt(3,student.getClassroom().getId());
+            preparedStatement.setInt(4,student.getId());
+            rowUpdate = preparedStatement.executeUpdate()>0;
+        }catch (SQLException e ){
+            System.out.println(e.getMessage());
+        }
+        return rowUpdate;
     }
 
 
@@ -91,7 +135,28 @@ public class StudentServiceIpml implements IStudentService{
     }
 
     @Override
-    public List<Student> findAllOrderByAge() {
-        return null;
+    public List<Student> findAllByClass(int classId) {
+        List<Student> students =  new ArrayList<>();
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM student where classId = ?")) {
+            preparedStatement.setInt(1,classId);
+            System.out.println(preparedStatement);
+            // Step 3: Execute the query or update query
+            ResultSet rs = preparedStatement.executeQuery();
+            // Step 4: Process the ResultSet object.
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String name = rs.getString("name");
+                int age = rs.getInt("age");
+                int clazzId =  rs.getInt("classId");
+                Classroom classroom = classService.findById(clazzId);
+                students.add(new Student(id, name,age,classroom));
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return students;
     }
+
+
 }
