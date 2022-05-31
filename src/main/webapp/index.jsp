@@ -12,6 +12,9 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF"
             crossorigin="anonymous"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
 </head>
 <body>
 <div class="container">
@@ -19,7 +22,9 @@
         <div class="col-12">
             <nav class="navbar navbar-expand-lg navbar-light bg-light">
                 <a class="navbar-brand" href="#">Navbar</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <button class="navbar-toggler" type="button" data-toggle="collapse"
+                        data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
@@ -32,7 +37,8 @@
                             <a class="nav-link" href="/Students?action=create">Add Student</a>
                         </li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-expanded="false">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                               data-toggle="dropdown" aria-expanded="false">
                                 Dropdown
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -47,7 +53,8 @@
                         </li>
                     </ul>
                     <form class="form-inline my-2 my-lg-0" action="/home">
-                        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="name">
+                        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search"
+                               name="name">
                         <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
                     </form>
                 </div>
@@ -75,32 +82,34 @@
                 </tr>
                 </thead>
                 <tbody>
-                    <c:forEach items="${students}" var="std">
-                        <tr>
-                            <td>${std.name}</td>
-                            <td>${std.age}</td>
-                            <td>${std.classroom.name}</td>
-                            <td>
-                                <a href="/Students?action=view&id=${std.id}" class="btn btn-outline-info">View</a>
-                                <a href="/Students?action=update&id=${std.id}" class="btn btn-outline-warning">sửa</a>
-                                <form action="/Students" method="post" id="delete${std.id}">
-                                    <input type="hidden" name="id" value="${std.id}">
-                                    <input type="hidden" name="action" value="delete">
-                                    <a onclick="checkDelete(${std.id})" class="btn btn-outline-danger">xóa</a>
-                                </form>
+                <c:forEach items="${students}" var="std">
+                    <tr>
+                        <td>${std.name}</td>
+                        <td>${std.age}</td>
+                        <td>${std.classroom.name}</td>
+                        <td>
+                            <a href="/Students?action=view&id=${std.id}" class="btn btn-outline-info">View</a>
+                            <a href="/Students?action=update&id=${std.id}" class="btn btn-outline-warning"><i
+                                    class="material-icons">create</i></a>
+                            <form action="/Students" method="post" id="delete${std.id}">
+                                <input type="hidden" name="id" value="${std.id}">
+                                <input type="hidden" name="action" value="delete">
+                                <a onclick="checkDelete(${std.id})" class="btn btn-outline-danger"><i
+                                        class="material-icons" style="color:red">delete_sweep</i></a>
+                            </form>
 
-                            </td>
-                        </tr>
-                    </c:forEach>
+                        </td>
+                    </tr>
+                </c:forEach>
                 </tbody>
             </table>
         </div>
     </div>
 </div>
 <script>
-    function checkDelete(id){
-        if(confirm("Bạn có chắc chắn muốn xóa!")){
-            document.getElementById("delete"+id).submit();
+    function checkDelete(id) {
+        if (confirm("Bạn có chắc chắn muốn xóa!")) {
+            document.getElementById("delete" + id).submit();
         }
     }
 </script>
